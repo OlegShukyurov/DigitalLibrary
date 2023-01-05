@@ -12,6 +12,7 @@ import ru.shukyurov.library.models.Person;
 import ru.shukyurov.library.util.BookValidator;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 
 @Controller
@@ -59,6 +60,11 @@ public class BooksController {
     public String showBook(@PathVariable("id") int id, Model model, @ModelAttribute("person") Person person) {
         model.addAttribute("book", bookDAO.getBook(id));
         model.addAttribute("people", personDAO.getPeople());
+
+        Optional<Person> bookOwner = bookDAO.getBookOwner(id);
+
+        if (bookOwner.isPresent())
+            model.addAttribute("bookOwner", bookOwner.get());
 
         return "books/showBook";
     }

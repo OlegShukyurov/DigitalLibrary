@@ -19,7 +19,7 @@
         </form>
     </div>
     <div th:if = "${book.getPerson_id() != 0}">
-        <p th:text = "${'Книга сейчас у: ' + people.get(book.getPerson_id()-1).getFullName()}">VALUE</p>
+        <p th:text = "${'Книга сейчас у: ' + bookOwner.getFullName()}">VALUE</p>
         <form th:method = "DELETE" th:action = "@{/books/releaseOwner{id} (id=${book.getBook_id()})}">
             <input type="submit" value="Освободить книгу"/>
         </form>
