@@ -3,11 +3,15 @@ package ru.shukyurov.library.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.shukyurov.library.dao.BookDAO;
 import ru.shukyurov.library.dao.PersonDAO;
 import ru.shukyurov.library.models.Book;
 import ru.shukyurov.library.models.Person;
+import ru.shukyurov.library.util.BookValidator;
+
+import javax.validation.Valid;
 
 
 @Controller
@@ -16,11 +20,13 @@ public class BooksController {
 
     private final PersonDAO personDAO;
     private final BookDAO bookDAO;
+    private final BookValidator bookValidator;
 
     @Autowired
-    public BooksController(PersonDAO personDAO, BookDAO bookDAO) {
+    public BooksController(PersonDAO personDAO, BookDAO bookDAO, BookValidator bookValidator) {
         this.personDAO = personDAO;
         this.bookDAO = bookDAO;
+        this.bookValidator = bookValidator;
     }
 
     @GetMapping
@@ -37,7 +43,13 @@ public class BooksController {
     }
 
     @PostMapping()
-    public String createBook(@ModelAttribute("book") Book book) {
+    public String createBook(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
+
+        bookValidator.validate(book, bindingResult);
+
+        if (bindingResult.hasErrors())
+            return "books/new";
+
         bookDAO.addBook(book);
 
         return "redirect:/books";
@@ -73,7 +85,13 @@ public class BooksController {
     }
 
     @PatchMapping("/{id}")
-    public String updateBook(@PathVariable("id") int id, @ModelAttribute("book") Book book) {
+    public String updateBook(@PathVariable("id") int id, @ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
+
+        bookValidator.validate(book, bindingResult);
+
+        if (bindingResult.hasErrors())
+            return "books/editBook";
+
         bookDAO.updateBook(id, book);
 
         return "redirect:/books";

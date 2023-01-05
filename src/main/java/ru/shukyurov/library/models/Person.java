@@ -1,9 +1,19 @@
 package ru.shukyurov.library.models;
 
+import javax.validation.constraints.*;
+
 public class Person {
 
     private int person_id;
+
+    @NotEmpty(message = "Name should not be empty")
+    @Size(min = 12, max = 100, message = "Name should be between 12 and 100 characters")
+    @Pattern(regexp = "^([А-Я][а-я]*\\s[А-Я][а-я]*\\s[А-Я][а-я]*)$",
+    message = "Your name should be in this format: 'Surname' 'Name' 'Lastname' for example: 'Иванов Иван Иванович'")
     private String fullName;
+
+    @Min(value = 1900, message = "Year should be greater than 1900")
+    @Max(value = 2023, message = "Year should be 2023 or smaller")
     private int yearOfBirthday;
 
     public Person() {

@@ -1,11 +1,23 @@
 package ru.shukyurov.library.models;
 
+import javax.validation.constraints.*;
+
 public class Book {
 
     private int book_id;
     private int person_id;
+
+    @NotEmpty(message = "Title should not be empty")
     private String title;
+
+    @Size(min = 3, message = "Author name should have 3 or more characters")
+    @NotEmpty(message = "Author name should not be empty")
+    @Pattern(regexp = "^([А-Я][а-я]*\\s[А-Я][а-я]*)$",
+            message = "Author name should be in this format: 'Surname' 'Name' for example: 'Иванов Иван'")
     private String authorName;
+
+    @Min(value = 500, message = "Year of writing should be greater than 1500")
+    @Max(value = 2023, message = "Year of writing should be 2023 or smaller")
     private int yearOfWriting;
 
 

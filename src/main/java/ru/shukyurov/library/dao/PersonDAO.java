@@ -8,6 +8,7 @@ import ru.shukyurov.library.models.Book;
 import ru.shukyurov.library.models.Person;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class PersonDAO {
@@ -26,6 +27,11 @@ public class PersonDAO {
     public void addPerson(Person person) {
         jdbcTemplate.update("INSERT INTO Person(fullName, yearOfBirthday) VALUES (?,?)",
                 person.getFullName(), person.getYearOfBirthday());
+    }
+
+    public Optional<Person> getPerson(String fullName) {
+        return jdbcTemplate.query("SELECT * FROM Person WHERE fullName=?", new Object[]{fullName},
+                new BeanPropertyRowMapper<>(Person.class)).stream().findAny();
     }
 
     public Person getPerson(int id) {
